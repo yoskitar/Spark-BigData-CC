@@ -8,8 +8,9 @@ if __name__ == "__main__":
     sqlContext = sql.SQLContext(sc)
 
     headerFile = sc.textFile("/user/datasets/ecbdl14/ECBDL14_IR2.header").collect()
-    headerReduced = headerFile.filter(lambda line: line.contains("@attribute")).map(lambda line: line.split()[1])
-    print(headerReduced)
+    headerFiltered = filter(lambda line: line.contains("@attribute"),headerFile)
+    headers = list(map(lambda line: line.split()[1], headerFiltered))
+    print(headers)
 
     sc.stop()
 
