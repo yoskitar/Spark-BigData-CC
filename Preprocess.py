@@ -7,8 +7,10 @@ if __name__ == "__main__":
     sc = SparkContext(conf=conf)
 
     headerFile = sc.textFile("/user/datasets/ecbdl14/ECBDL14_IR2.header")
-    #headerReduced = headerFile.filter(headerFile.value.contains("@attribute")).map(lambda line: line[1])
-    headerFile.show()
+    headerFile.toDF()
+
+    headerReduced = headerFile.filter(headerFile.value.contains("@attribute")).map(lambda line: line[1])
+    headerReduced.show()
 
     sc.stop()
 
