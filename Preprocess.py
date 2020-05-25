@@ -1,14 +1,13 @@
 import sys
-from pyspark import SparkContext, SparkConf
+from pyspark import SparkContext, SparkConf, sql
 from pyspark.ml.classification import LogisticRegression
 if __name__ == "__main__":
     # create Spark context with Spark configuration
     conf = SparkConf().setAppName("Practica 4 - O.J.F.")
     sc = SparkContext(conf=conf)
+    sqlContext = sql.SQLContext(sc)
 
-    headerFile = sc.textFile("/user/datasets/ecbdl14/ECBDL14_IR2.header")
-    headerFile.toDF()
-
+    headerFile = sc.textFile("/user/datasets/ecbdl14/ECBDL14_IR2.header").toDF()
     headerReduced = headerFile.filter(headerFile.value.contains("@attribute")).map(lambda line: line[1])
     headerReduced.show()
 
