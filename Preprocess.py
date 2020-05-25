@@ -3,13 +3,14 @@ from pyspark import SparkContext, SparkConf
 from pyspark.ml.classification import LogisticRegression
 if __name__ == "__main__":
 # create Spark context with Spark configuration
-conf = SparkConf().setAppName("Practica 4 - O.J.F.").set("spark.hadoop.yarn.resourcemanager.address",
-"hadoop-master:8032")
+conf = SparkConf().setAppName("Practica 4 - O.J.F.")
 sc = SparkContext(conf=conf)
 
 headerFile = sc.textFile("/user/datasets/ecbdl14/ECBDL14_IR2.header")
 headerReduced = headerFile.filter(headerFile.value.contains("@attribute")).map(lambda line: line[1])
 headerReduced.show()
+
+sc.stop()
 
 #df = sc.read.csv("/user/datasets/ecbdl14/ECBDL14_IR2.data",header=False,sep=",",inferSchema=True)
 #df.show()
