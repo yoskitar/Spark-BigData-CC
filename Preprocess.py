@@ -16,7 +16,7 @@ if __name__ == "__main__":
     headers = list(map(lambda line: line.split()[1], headerFiltered))
     
     # Leemos el DF con los datos y renombramos las columnas.
-    df = sc.read.csv("/user/datasets/ecbdl14/ECBDL14_IR2.data",header=False,sep=",",inferSchema=True)
+    df = sqlContext.read.csv("/user/datasets/ecbdl14/ECBDL14_IR2.data",header=False,sep=",",inferSchema=True)
 
     dfRenamed = reduce(lambda data, idx: data.withColumnRenamed(df.schema.names[idx], headers[idx]), range(len(df.schema.names)), df)
     dfRenamed.createOrReplaceTempView("sql_dataset")
