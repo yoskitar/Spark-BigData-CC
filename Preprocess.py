@@ -9,7 +9,7 @@ if __name__ == "__main__":
 
     headerFile = sc.textFile("/user/datasets/ecbdl14/ECBDL14_IR2.header")
     headerReduced = headerFile.filter(lambda line: line.contains("@attribute")).map(lambda line: line.split()[1])
-    print(headerReduced)
+    print(headerReduced.collect())
 
     sc.stop()
 
