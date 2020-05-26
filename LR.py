@@ -11,8 +11,8 @@ if __name__ == "__main__":
     # Leer csv con columnas filtradas
     df_columns = sqlContext.read.csv("./filteredC.small.training", header=True, sep=",", inferSchema=True)
     #Equilibrar clases del DF
-    c0_count = df_columns.filter(df_columns['class']==0).shape[0]
-    c1_count = df_columns.filter(df_columns['class']==1).shape[0]
+    c0_count = df_columns.filter(df_columns['class']==0)['class'].count()
+    c1_count = df_columns.filter(df_columns['class']==1)['class'].count()
     print('Class 0 count: ' + str(c0_count))
     print('Class 1 count: ' + str(c1_count))
     tam_partition = c1_count
@@ -25,8 +25,8 @@ if __name__ == "__main__":
     df_0.head()
     df_1.head()
 
-    print('DF0 count: ' + str(df_0.shape[0]))
-    print('DF1 count: ' + str(df_1.shape[0]))
+    print('DF0 count: ' + str(df_0['class'].count()))
+    print('DF1 count: ' + str(df_1['class'].count()))
 
     
     #df_columns.createOrReplaceTempView("sql_dataset_columns")
