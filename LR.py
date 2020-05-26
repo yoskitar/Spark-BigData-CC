@@ -10,9 +10,8 @@ if __name__ == "__main__":
     sqlContext = sql.SQLContext(sc)
     # Leer csv con columnas filtradas
     df_columns = sqlContext.read.csv("./filteredC.small.training", header=True, sep=",", inferSchema=True)
-
     #Equilibrar clases del DF
-    c0_count = len((df_columns.filter(df_columns['class']==0)).index)
+    c0_count = df_columns.groupBy("class").count().iloc[0,1]
     #c1_count = df_columns.filter(df_columns['class']==1)['class'].count()
     print('Class 0 count: ' + str(c0_count))
     #print('Class 1 count: ' + str(c1_count))
