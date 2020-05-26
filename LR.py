@@ -10,7 +10,9 @@ if __name__ == "__main__":
     sqlContext = sql.SQLContext(sc)
 
     df_columns = sc.read.csv("./filteredC.small.training", header=True, sep=",", inferSchema=True)
-    # Obtenemos el tamaño de cada clase para formar un DF equilibrado
+
+
+    
     c0_count = df_columns.filter(df_columns['class']==0).shape[0]
     c1_count = df_columns.filter(df_columns['class']==1).shape[0]
     print('Class 0 count: ' + str(c0_count))
