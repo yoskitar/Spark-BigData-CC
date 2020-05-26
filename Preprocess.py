@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     dfRenamed = reduce(lambda data, idx: data.withColumnRenamed(df.schema.names[idx], headers[idx]), range(len(df.schema.names)), df)
     dfRenamed.createOrReplaceTempView("sql_dataset")
-    sqlDF = sqlContext.sql("SELECT PredSA_freq_global_0, 'PredSA_central_-2', PSSM_r1_3_V, PSSM_r1_2_I, PSSM_r1_2_W, 'PSSM_r2_-4_Y', class FROM sql_dataset LIMIT 10")
+    sqlDF = sqlContext.sql('SELECT PredSA_freq_global_0, `PredSA_central_-2`, PSSM_r1_3_V, PSSM_r1_2_I, PSSM_r1_2_W, `PSSM_r2_-4_Y`, class FROM sql_dataset LIMIT 10')
     sqlDF.show()
     #lr = LogisticRegression(maxIter=10, regParam=0.3, elasticNetParam=0.8)
     #lrModel = lr.fit(sqlDF)
