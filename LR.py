@@ -8,8 +8,9 @@ if __name__ == "__main__":
     conf = SparkConf().setAppName("Practica 4 - O.J.F.")
     sc = SparkContext(conf=conf)
     sqlContext = sql.SQLContext(sc)
-
+    # Leer csv con columnas filtradas
     df_columns = sqlContext.read.csv("./filteredC.small.training", header=True, sep=",", inferSchema=True)
+    #Equilibrar clases del DF
     c0_count = df_columns.filter(df_columns['class']==0).shape[0]
     c1_count = df_columns.filter(df_columns['class']==1).shape[0]
     print('Class 0 count: ' + str(c0_count))
