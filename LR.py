@@ -26,9 +26,11 @@ if __name__ == "__main__":
 
     # Unimos las clases y hacemos un shuffle
     df_balanced = df_0.union(df_1)
+
     # Usaremos el 80% para train y el 20% restante para test
     df_test = df_balanced.sample(False, 0.2, 5)
     df_train = df_balanced.subtract(df_test)
+
     #print('DF_Balanced count: ' + str(df_balanced.select('class').count()))
     #print('DF_Train count: ' + str(df_train.select('class').count()))
     #print('DF_Test count: ' + str(df_test.select('class').count()))
@@ -41,10 +43,6 @@ if __name__ == "__main__":
 
     df_train_reduced = df_train.sample(False, 0.01, 5)
 
-    #df_columns.createOrReplaceTempView("sql_dataset_columns")
-    #sqlDF_0 = sqlContext.sql('SELECT * FROM sql_dataset_columns WHERE class==0 LIMIT 1000')
-    #sqlDF_1 = sqlContext.sql('SELECT * FROM sql_dataset_columns WHERE class==1 LIMIT 1000')
- 
     # Preparamos el DF para aplicar los algoritmos de MLLib
     assembler = VectorAssembler(inputCols=["PredSA_freq_global_0", "PredSA_central_-2", "PSSM_r1_3_V", "PSSM_r1_2_I", "PSSM_r1_2_W", "PSSM_r2_-4_Y"], outputCol='features')
     trainingData = assembler.transform(df_train_reduced).select("features","class").withColumnRenamed("class","label")
@@ -54,6 +52,7 @@ if __name__ == "__main__":
     lrModel = lr.fit(trainingData)
     trainingSummary = lrModel.summary
     
+    # Obtenemos las metricas del entrenamiento
     accuracy = trainingSummary.accuracy
     falsePositiveRate = trainingSummary.weightedFalsePositiveRate
     truePositiveRate = trainingSummary.weightedTruePositiveRate
