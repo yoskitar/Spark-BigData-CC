@@ -48,17 +48,11 @@ if __name__ == "__main__":
     trainingData = assembler.transform(df_train_reduced).select("features","class").withColumnRenamed("class","label")
 
     # Entrenamos el modelo
-    lr = LogisticRegression(maxIter=10, regParam=0.3, elasticNetParam=0.8, family="multinomial")
+    lr = LogisticRegression(maxIter=10, regParam=0.3, elasticNetParam=0.8)
     lrModel = lr.fit(trainingData)
     trainingSummary = lrModel.summary
     
     # Obtenemos las metricas del entrenamiento
-    accuracy = trainingSummary.accuracy
-    falsePositiveRate = trainingSummary.weightedFalsePositiveRate
-    truePositiveRate = trainingSummary.weightedTruePositiveRate
-    fMeasure = trainingSummary.weightedFMeasure()
-    precision = trainingSummary.weightedPrecision
-    recall = trainingSummary.weightedRecall
-    print("Accuracy: %s\nFPR: %s\nTPR: %s\nF-measure: %s\nPrecision: %s\nRecall: %s" % (accuracy, falsePositiveRate, truePositiveRate, fMeasure, precision, recall))
-    
+    trainingSummary.roc.show()
+    print("areaUnderROC: " + str(trainingSummary.areaUnderROC))
     sc.stop()
