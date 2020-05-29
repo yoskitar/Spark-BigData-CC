@@ -2,6 +2,7 @@ import sys
 from pyspark import SparkContext, SparkConf, sql
 from pyspark.ml.classification import LogisticRegression
 from functools import reduce
+from pyspark.ml.linalg import Vectors
 
 if __name__ == "__main__":
     # create Spark context with Spark configuration
@@ -43,17 +44,7 @@ if __name__ == "__main__":
     #sqlDF_0 = sqlContext.sql('SELECT * FROM sql_dataset_columns WHERE class==0 LIMIT 1000')
     #sqlDF_1 = sqlContext.sql('SELECT * FROM sql_dataset_columns WHERE class==1 LIMIT 1000')
  
-    lr = LogisticRegression(maxIter=10, regParam=0.3, elasticNetParam=0.8)
-    lrModel = lr.fit(df_train_reduced)
-    trainingSummary = lrModel.summary
-
-    accuracy = trainingSummary.accuracy
-    falsePositiveRate = trainingSummary.weightedFalsePositiveRate
-    truePositiveRate = trainingSummary.weightedTruePositiveRate
-    fMeasure = trainingSummary.weightedFMeasure()
-    precision = trainingSummary.weightedPrecision
-    recall = trainingSummary.weightedRecall
-    print("Accuracy: %s\nFPR: %s\nTPR: %s\nF-measure: %s\nPrecision: %s\nRecall: %s" % (accuracy, falsePositiveRate, truePositiveRate, fMeasure, precision, recall))
-
-
+    trainingData=df_train_reduced.rdd.map(lambda x:(Vectors.dense(x[0:-1]), x[-1])).toDF(["features", "label"])
+    trainingData.show()
+    
     sc.stop()
