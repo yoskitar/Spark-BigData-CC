@@ -45,8 +45,21 @@ if __name__ == "__main__":
     #sqlDF_0 = sqlContext.sql('SELECT * FROM sql_dataset_columns WHERE class==0 LIMIT 1000')
     #sqlDF_1 = sqlContext.sql('SELECT * FROM sql_dataset_columns WHERE class==1 LIMIT 1000')
  
+    # Preparamos el DF para aplicar los algoritmos de MLLib
     assembler = VectorAssembler(inputCols=["PredSA_freq_global_0", "PredSA_central_-2", "PSSM_r1_3_V", "PSSM_r1_2_I", "PSSM_r1_2_W", "PSSM_r2_-4_Y"], outputCol='features')
     trainingData = assembler.transform(df_train_reduced).select("features","class").withColumnRenamed("class","label")
-    trainingData.show(50)
+
+    # Entrenamos el modelo
+    lr = LogisticRegression(maxIter=10, regParam=0.3, elasticNetParam=0.8)
+    lrModel = lr.fit(trainingData)
+    trainingSummary = lrModel.summary
+    # Obtenemos las métricas del entrenamiento
+    accuracy = trainingSummary.accuracy
+    falsePositiveRate = trainingSummary.weightedFalsePositiveRate
+    truePositiveRate = trainingSummary.weightedTruePositiveRate
+    fMeasure = trainingSummary.weightedFMeasure()
+    precision = trainingSummary.weightedPrecision
+    recall = trainingSummary.weightedRecall
+    print("Accuracy: %s\nFPR: %s\nTPR: %s\nF-measure: %s\nPrecision: %s\nRecall: %s" % (accuracy, falsePositiveRate, truePositiveRate, fMeasure, precision, recall))
     
     sc.stop()
