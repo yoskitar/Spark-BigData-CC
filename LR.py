@@ -31,8 +31,8 @@ if __name__ == "__main__":
     df_train = df_balanced.subtract(df_test)
 
     print('DF_Balanced count: ' + str(df_balanced.select('class').count()))
-    print('DF_Train count: ' + str(df_test.select('class').count()))
     print('DF_Test count: ' + str(df_train.select('class').count()))
+    print('DF_Train count: ' + str(df_test.select('class').count()))
 
     #df_columns.createOrReplaceTempView("sql_dataset_columns")
     #sqlDF_0 = sqlContext.sql('SELECT * FROM sql_dataset_columns WHERE class==0 LIMIT 1000')
