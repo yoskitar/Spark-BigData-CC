@@ -16,34 +16,44 @@ if __name__ == "__main__":
     #print('Class 1 count: ' + str(c1_count))
     tam_partition = c1_count
     if(c0_count < c1_count):
-        tam_partition = c0_countss
-    # Nos quedamos con el 80% para train y el resto para test
-    tam_partition_train = tam_partition*80/100
-    tam_partition_test = tam_partition - tam_partition_train
+        tam_partition = c0_count
+        
     # Componemos el DF  de train balanceado 
     df_0 = df_columns.filter(df_columns['class']==0).limit(tam_partition)
     df_1 = df_columns.filter(df_columns['class']==1).limit(tam_partition)
 
     # Unimos las clases y hacemos un shuffle
     df_balanced = df_0.union(df_1)
-
+    # Usaremos el 80% para train y el 20% restante para test
     df_test = df_balanced.sample(False, 0.2, 5)
     df_train = df_balanced.subtract(df_test)
-    df_test = df_test.sample(False, 1.0, 5)
     #print('DF_Balanced count: ' + str(df_balanced.select('class').count()))
     #print('DF_Train count: ' + str(df_train.select('class').count()))
     #print('DF_Test count: ' + str(df_test.select('class').count()))
 
+    print('DF_Train_1 count: ' + str(df_train.filter(df_columns['class']==1).select('class').count()))
+    print('DF_Train_0 count: ' + str(df_train.filter(df_columns['class']==0).select('class').count()))
 
     print('DF_Test_1 count: ' + str(df_test.filter(df_columns['class']==1).select('class').count()))
     print('DF_Test_0 count: ' + str(df_test.filter(df_columns['class']==0).select('class').count()))
 
-    df_test.show(200)
+    df_train_reduced = df_train.sample(False, 0.01, 5)
+
     #df_columns.createOrReplaceTempView("sql_dataset_columns")
     #sqlDF_0 = sqlContext.sql('SELECT * FROM sql_dataset_columns WHERE class==0 LIMIT 1000')
     #sqlDF_1 = sqlContext.sql('SELECT * FROM sql_dataset_columns WHERE class==1 LIMIT 1000')
  
-    #lr = LogisticRegression(maxIter=10, regParam=0.3, elasticNetParam=0.8)
-    #lrModel = lr.fit(sqlDF)
-    #lrModel.summary()
+    lr = LogisticRegression(maxIter=10, regParam=0.3, elasticNetParam=0.8)
+    lrModel = lr.fit(df_train_reduced)
+    trainingSummary = lrModel.summary
+
+    accuracy = trainingSummary.accuracy
+    falsePositiveRate = trainingSummary.weightedFalsePositiveRate
+    truePositiveRate = trainingSummary.weightedTruePositiveRate
+    fMeasure = trainingSummary.weightedFMeasure()
+    precision = trainingSummary.weightedPrecision
+    recall = trainingSummary.weightedRecall
+    print("Accuracy: %s\nFPR: %s\nTPR: %s\nF-measure: %s\nPrecision: %s\nRecall: %s" % (accuracy, falsePositiveRate, truePositiveRate, fMeasure, precision, recall))
+
+
     sc.stop()
