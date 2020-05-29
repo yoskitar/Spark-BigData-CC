@@ -53,7 +53,7 @@ if __name__ == "__main__":
     lr = LogisticRegression(maxIter=10, regParam=0.3, elasticNetParam=0.8)
     lrModel = lr.fit(trainingData)
     trainingSummary = lrModel.summary
-    # Obtenemos las métricas del entrenamiento
+    # Obtenemos las metricas del entrenamiento
     accuracy = trainingSummary.accuracy
     falsePositiveRate = trainingSummary.weightedFalsePositiveRate
     truePositiveRate = trainingSummary.weightedTruePositiveRate
