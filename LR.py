@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
     df_test = df_balanced.sample(False, 0.2, 5)
     df_train = df_balanced.subtract(df_test)
-    df_test = df_balanced.sample(False, 1.0, 5)
+    df_test = df_test.sample(False, 1.0, 5)
     #print('DF_Balanced count: ' + str(df_balanced.select('class').count()))
     #print('DF_Train count: ' + str(df_train.select('class').count()))
     #print('DF_Test count: ' + str(df_test.select('class').count()))
