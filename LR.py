@@ -24,7 +24,7 @@ if __name__ == "__main__":
     df_0 = df_columns.filter(df_columns['class']==0).limit(tam_partition)
     df_1 = df_columns.filter(df_columns['class']==1).limit(tam_partition)
 
-    df_balanced = df_0.union(df_1).sample(False, 1, 5)
+    df_balanced = df_0.union(df_1).sample(False, 1.0, 5)
     df_balanced.show(30)
 
     df_test = df_balanced.sample(False, 0.2, 5).show()
