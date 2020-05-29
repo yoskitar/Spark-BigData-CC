@@ -3,6 +3,7 @@ from pyspark import SparkContext, SparkConf, sql
 from pyspark.ml.classification import LogisticRegression
 from functools import reduce
 from pyspark.ml.linalg import Vectors
+from pyspark.ml.feature import VectorAssembler
 
 if __name__ == "__main__":
     # create Spark context with Spark configuration
@@ -44,7 +45,8 @@ if __name__ == "__main__":
     #sqlDF_0 = sqlContext.sql('SELECT * FROM sql_dataset_columns WHERE class==0 LIMIT 1000')
     #sqlDF_1 = sqlContext.sql('SELECT * FROM sql_dataset_columns WHERE class==1 LIMIT 1000')
  
-    trainingData=df_train_reduced.rdd.map(lambda x:(Vectors.dense(x[0:-1]), x[-1])).toDF(["features", "label"])
-    trainingData.show()
+    assembler = VectorAssembler(inputCols=["PredSA_freq_global_0", "PredSA_central_-2", "PSSM_r1_3_V", "PSSM_r1_2_I", "PSSM_r1_2_W", "PSSM_r2_-4_Y"], outputCol='features')
+    trainingData = assembler.transform(df_train_reduced).select("features","class").withColumnRenamed("class","label")
+    trainingData.show(50)
     
     sc.stop()
