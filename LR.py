@@ -29,14 +29,16 @@ if __name__ == "__main__":
 
     df_test = df_balanced.sample(False, 0.2, 5)
     df_train = df_balanced.subtract(df_test)
-
+    df_test = df_balanced.sample(False, 1.0, 5)
     #print('DF_Balanced count: ' + str(df_balanced.select('class').count()))
     #print('DF_Train count: ' + str(df_train.select('class').count()))
     #print('DF_Test count: ' + str(df_test.select('class').count()))
 
+
     print('DF_Test_1 count: ' + str(df_test.filter(df_columns['class']==1).select('class').count()))
     print('DF_Test_0 count: ' + str(df_test.filter(df_columns['class']==0).select('class').count()))
 
+    df_test.show(200)
     #df_columns.createOrReplaceTempView("sql_dataset_columns")
     #sqlDF_0 = sqlContext.sql('SELECT * FROM sql_dataset_columns WHERE class==0 LIMIT 1000')
     #sqlDF_1 = sqlContext.sql('SELECT * FROM sql_dataset_columns WHERE class==1 LIMIT 1000')
