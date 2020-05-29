@@ -24,7 +24,7 @@ if __name__ == "__main__":
     df_0 = df_columns.filter(df_columns['class']==0).limit(tam_partition_train)
     df_1 = df_columns.filter(df_columns['class']==1).limit(tam_partition_train)
 
-    prueba = df_columns.filter(df_columns['class']==1).limit(10)
+    prueba = df_columns.filter(df_columns['class']==0).limit(10)
     prueba.show()
     prueba.sample(False, 0.2, 5).show()
     #print('DF0 count: ' + str(df_0.select('class').count()))
