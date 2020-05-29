@@ -25,10 +25,9 @@ if __name__ == "__main__":
     df_1 = df_columns.filter(df_columns['class']==1).limit(tam_partition)
 
     # Unimos las clases y hacemos un shuffle
-    df_balanced = df_0.union(df_1).sample(False, 1.0, 5)
-    df_balanced.show(30)
+    df_balanced = df_0.union(df_1)
 
-    df_test = df_balanced.sample(False, 0.2, 5).show()
+    df_test = df_balanced.sample(False, 0.2, 5)
     df_train = df_balanced.subtract(df_test)
 
     print('DF_Balanced count: ' + str(df_balanced.select('class').count()))
