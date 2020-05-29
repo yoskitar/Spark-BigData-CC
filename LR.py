@@ -21,14 +21,18 @@ if __name__ == "__main__":
     tam_partition_train = tam_partition*80/100
     tam_partition_test = tam_partition - tam_partition_train
     # Componemos el DF  de train balanceado 
-    df_0 = df_columns.filter(df_columns['class']==0).limit(tam_partition_train)
-    df_1 = df_columns.filter(df_columns['class']==1).limit(tam_partition_train)
+    df_0 = df_columns.filter(df_columns['class']==0).limit(tam_partition)
+    df_1 = df_columns.filter(df_columns['class']==1).limit(tam_partition)
 
-    prueba = df_columns.filter(df_columns['class']==0).limit(10)
-    prueba.show()
-    prueba.sample(False, 0.2, 5).show()
-    #print('DF0 count: ' + str(df_0.select('class').count()))
-    #print('DF1 count: ' + str(df_1.select('class').count()))
+    df_balanced = df_0.union(df_1).sample(False, 1, 5)
+    df_balanced.show(30)
+
+    df_test = df_balanced.sample(False, 0.2, 5).show()
+    df_train = df_balanced.subtract(df_test)
+
+    print('DF_Balanced count: ' + str(df_balanced.select('class').count()))
+    print('DF_Train count: ' + str(df_test.select('class').count()))
+    print('DF_Test count: ' + str(df_train.select('class').count()))
 
     #df_columns.createOrReplaceTempView("sql_dataset_columns")
     #sqlDF_0 = sqlContext.sql('SELECT * FROM sql_dataset_columns WHERE class==0 LIMIT 1000')
