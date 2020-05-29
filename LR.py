@@ -41,7 +41,7 @@ if __name__ == "__main__":
     print('DF_Test_1 count: ' + str(df_test.filter(df_columns['class']==1).select('class').count()))
     print('DF_Test_0 count: ' + str(df_test.filter(df_columns['class']==0).select('class').count()))
 
-    df_train_reduced = df_train.sample(False, 0.2, 5)
+    df_train_reduced = df_train.sample(False, 1.0, 5)
 
     # Preparamos el DF para aplicar los algoritmos de MLLib
     assembler = VectorAssembler(inputCols=["PredSA_freq_global_0", "PredSA_central_-2", "PSSM_r1_3_V", "PSSM_r1_2_I", "PSSM_r1_2_W", "PSSM_r2_-4_Y"], outputCol='features')
@@ -50,12 +50,12 @@ if __name__ == "__main__":
     # Entrenamos el modelo
     lr = LogisticRegression(maxIter=10, regParam=0.3, elasticNetParam=0.8, family="multinomial")
     lrModel = lr.fit(trainingData)
-    # trainingSummary = lrModel.summary
+    trainingSummary = lrModel.summary
 
     print("Coefficients: \n" + str(lrModel.coefficientMatrix))
     print("Intercept: " + str(lrModel.interceptVector))
     
     # Obtenemos las metricas del entrenamiento
-    # trainingSummary.roc.show()
-    # print("areaUnderROC: " + str(trainingSummary.areaUnderROC))
+    trainingSummary.roc.show()
+    print("areaUnderROC: " + str(trainingSummary.areaUnderROC))
     sc.stop()
