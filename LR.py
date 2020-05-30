@@ -48,7 +48,7 @@ if __name__ == "__main__":
     trainingData = assembler.transform(df_train).select("features","class").withColumnRenamed("class","label")
 
     # Entrenamos el modelo
-    lr = LogisticRegression(maxIter=100, regParam=0.3, elasticNetParam=0.8)
+    lr = LogisticRegression(maxIter=100, regParam=0.1, elasticNetParam=0.8)
     lrModel = lr.fit(trainingData)
     trainingSummary = lrModel.summary
 
