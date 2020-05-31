@@ -75,7 +75,7 @@ if __name__ == "__main__":
     trainingSummary.roc.show()
     print("areaUnderROC: " + str(trainingSummary.areaUnderROC))
     
-    """
+    
     lr = LogisticRegression(maxIter=10)
     paramGridLR = ParamGridBuilder().addGrid(lr.regParam, [0.1, 0.01, 0.3]).addGrid(lr.fitIntercept, [False, True]).addGrid(lr.elasticNetParam, [0.0, 0.5, 1.0]).build()
     tvs = TrainValidationSplit(estimator=lr,
@@ -86,23 +86,17 @@ if __name__ == "__main__":
     model = tvs.fit(trainingData)
     predictions = model.transform(testData)
     predictions.select("features", "label", "prediction").show(100)
-
+    """
     rf = RandomForestClassifier(labelCol="label", featuresCol="features")
     paramGridRF = ParamGridBuilder().addGrid(rf.numTrees, [10, 30, 60]).addGrid(rf.maxDepth, [3, 6]).build()
     predictionsRF = TVS(rf,paramGridRF,trainingData,testData)
     
-
-
-
     # Evaluate model
     evaluator = BinaryClassificationEvaluator()
-    auRocLR = evaluator.evaluate(predictions)
+    # auRocLR = evaluator.evaluate(predictions)
     auRocRF = evaluator.evaluate(predictionsRF)
 
-
-
-
-    print("DF_TEST - Area Under Roc - LR: " + str(auRocLR) )
+    # print("DF_TEST - Area Under Roc - LR: " + str(auRocLR) )
     print("DF_TEST - Area Under Roc - RF: " + str(auRocRF) )
-    #print(model.bestModel.extractParamMap())
+    # print(model.bestModel.extractParamMap())
     sc.stop()
