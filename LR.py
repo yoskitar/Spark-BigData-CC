@@ -15,7 +15,7 @@ def TVS(estimator, paramGrid, dataTrain, dataTest):
                            trainRatio=0.8)
     model = tvs.fit(dataTrain)
     predictions = model.transform(dataTest)
-    return predictions
+    return predictions, model
 
 if __name__ == "__main__":
     # create Spark context with Spark configuration
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     # Obtenemos las metricas del entrenamiento
     trainingSummary.roc.show()
     print("areaUnderROC: " + str(trainingSummary.areaUnderROC))
-    """
+    
     
     # Gradient-boosted tree MODEL
     gbt = GBTClassifier(labelCol="label", featuresCol="features", seed=12345)
@@ -86,20 +86,22 @@ if __name__ == "__main__":
     paramGridLR = ParamGridBuilder().addGrid(lr.regParam, [0.1, 0.01, 0.3]).addGrid(lr.fitIntercept, [False, True]).addGrid(lr.elasticNetParam, [0.0, 0.5, 1.0]).build()
     predictionsLR = TVS(lr,paramGridLR,trainingData,testData)
     #predictions.select("features", "label", "prediction").show(100)
-    
+    """
     # Random Forest MODEL
     rf = RandomForestClassifier(labelCol="label", featuresCol="features", seed=12345)
     paramGridRF = ParamGridBuilder().addGrid(rf.numTrees, [10, 30, 60, 100]).addGrid(rf.maxDepth, [3, 6, 12]).build()
-    predictionsRF = TVS(rf,paramGridRF,trainingData,testData)
+    predictionsRF, mRF = TVS(rf,paramGridRF,trainingData,testData)
     
     # Evaluate model
     evaluator = BinaryClassificationEvaluator()
-    auRocLR = evaluator.evaluate(predictionsLR)
+    # auRocLR = evaluator.evaluate(predictionsLR)
     auRocRF = evaluator.evaluate(predictionsRF)
-    auRocGBT = evaluator.evaluate(predictionsGBT)
+    # auRocGBT = evaluator.evaluate(predictionsGBT)
 
-    print("DF_TEST - Area Under Roc - LR: " + str(auRocLR) )
+    # print("DF_TEST - Area Under Roc - LR: " + str(auRocLR) )
     print("DF_TEST - Area Under Roc - RF: " + str(auRocRF) )
-    print("DF_TEST - Area Under Roc - GBT: " + str(auRocGBT) )
-    # print(model.bestModel.extractParamMap())
+    # print("DF_TEST - Area Under Roc - GBT: " + str(auRocGBT) )
+    print(mRF.bestModel.extractParamMap())
+    print(mRF.extractParamMap())
+    print(mRF.bestModel._Java_obj.extractParamMap())
     sc.stop()
