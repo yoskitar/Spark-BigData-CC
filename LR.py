@@ -30,10 +30,10 @@ if __name__ == "__main__":
     df_balanced = df_0.union(df_1)
 
     # Usaremos el 80% para train y el 20% restante para test
-    df_test = df_balanced.sample(False, 0.2, 5)
-    df_train = df_balanced.subtract(df_test)
+    #df_test = df_balanced.sample(False, 0.2, 5)
+    #df_train = df_balanced.subtract(df_test)
 
-    #df_train, df_test = df_balanced.randomSplit([0.9, 0.1], seed=12345)
+    df_train, df_test = df_balanced.randomSplit([0.9, 0.1], seed=12345)
 
     #print('DF_Balanced count: ' + str(df_balanced.select('class').count()))
     #print('DF_Train count: ' + str(df_train.select('class').count()))
@@ -51,8 +51,8 @@ if __name__ == "__main__":
     # Preparamos el DF para aplicar los algoritmos de MLLib
     assembler = VectorAssembler(inputCols=["PredSA_freq_global_0", "PredSA_central_-2", "PSSM_r1_3_V", "PSSM_r1_2_I", "PSSM_r1_2_W", "PSSM_r2_-4_Y"], outputCol='features')
     trainingData = assembler.transform(df_train).select("features","class").withColumnRenamed("class","label")
-    #testData = assembler.transform(df_test).select("features","class").withColumnRenamed("class","label")
-    
+    testData = assembler.transform(df_test).select("features","class").withColumnRenamed("class","label")
+    """
     # Entrenamos el modelo
     lr = LogisticRegression(maxIter=100, regParam=0.3, elasticNetParam=0.8)
     lrModel = lr.fit(trainingData)
@@ -74,6 +74,11 @@ if __name__ == "__main__":
                            # 80% of the data will be used for training, 20% for validation.
                            trainRatio=0.8)
     model = tvs.fit(trainingData)
-    model.transform(testData).select("features", "label", "prediction").show()
-    """
+    predictions = model.transform(testData)
+    predictions.select("features", "label", "prediction").show(100)
+
+    # Evaluate model
+    evaluator = BinaryClassificationEvaluator()
+    auRoc = evaluator.evaluate(predictions)
+    print("DF_TEST - Area Under Roc: " + str(auRoc) )
     sc.stop()
