@@ -1,11 +1,21 @@
 import sys
 from pyspark import SparkContext, SparkConf, sql
-from pyspark.ml.classification import LogisticRegression
+from pyspark.ml.classification import LogisticRegression, RandomForestClassifier
 from functools import reduce
 from pyspark.ml.linalg import Vectors
 from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.tuning import ParamGridBuilder, TrainValidationSplit
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
+
+def TVS(estimator, paramGrid, dataTrain, dataTest):
+    tvs = TrainValidationSplit(estimator=estimator,
+                           estimatorParamMaps=paramGrid,
+                           evaluator=BinaryClassificationEvaluator(),
+                           # 80% of the data will be used for training, 20% for validation.
+                           trainRatio=0.8)
+    model = tvs.fit(dataTrain)
+    predictions = model.transform(dataTest)
+    return predictions
 
 if __name__ == "__main__":
     # create Spark context with Spark configuration
@@ -67,9 +77,9 @@ if __name__ == "__main__":
     
     """
     lr = LogisticRegression(maxIter=10)
-    paramGrid = ParamGridBuilder().addGrid(lr.regParam, [0.1, 0.01, 0.3]).addGrid(lr.fitIntercept, [False, True]).addGrid(lr.elasticNetParam, [0.0, 0.5, 1.0]).build()
+    paramGridLR = ParamGridBuilder().addGrid(lr.regParam, [0.1, 0.01, 0.3]).addGrid(lr.fitIntercept, [False, True]).addGrid(lr.elasticNetParam, [0.0, 0.5, 1.0]).build()
     tvs = TrainValidationSplit(estimator=lr,
-                           estimatorParamMaps=paramGrid,
+                           estimatorParamMaps=paramGridLR,
                            evaluator=BinaryClassificationEvaluator(),
                            # 80% of the data will be used for training, 20% for validation.
                            trainRatio=0.8)
@@ -77,9 +87,22 @@ if __name__ == "__main__":
     predictions = model.transform(testData)
     predictions.select("features", "label", "prediction").show(100)
 
+    rf = RandomForestClassifier(labelCol="label", featuresCol="features")
+    paramGridRF = ParamGridBuilder().addGrid(rf.numTrees, [10, 30, 60]).addGrid(rf.maxDepth, [3, 6]).build()
+    predictionsRF = TVS(rf,paramGridRF,trainingData,testData)
+    
+
+
+
     # Evaluate model
     evaluator = BinaryClassificationEvaluator()
-    auRoc = evaluator.evaluate(predictions)
-    print("DF_TEST - Area Under Roc: " + str(auRoc) )
-    print(model.bestModel.extractParamMap())
+    auRocLR = evaluator.evaluate(predictions)
+    auRocRF = evaluator.evaluate(predictionsRF)
+
+
+
+
+    print("DF_TEST - Area Under Roc - LR: " + str(auRocLR) )
+    print("DF_TEST - Area Under Roc - RF: " + str(auRocRF) )
+    #print(model.bestModel.extractParamMap())
     sc.stop()
