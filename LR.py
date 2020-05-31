@@ -76,15 +76,18 @@ if __name__ == "__main__":
     print("areaUnderROC: " + str(trainingSummary.areaUnderROC))
     """
     
+    # Gradient-boosted tree MODEL
     gbt = GBTClassifier(labelCol="label", featuresCol="features", seed=12345)
     paramGridGBT = ParamGridBuilder().addGrid(gbt.maxIter, [10, 15, 20]).addGrid(gbt.maxDepth, [3, 6, 12]).build()
     predictionsGBT = TVS(gbt,paramGridGBT,trainingData,testData)
 
+    # Logistic Regression MODEL
     lr = LogisticRegression(maxIter=10)
     paramGridLR = ParamGridBuilder().addGrid(lr.regParam, [0.1, 0.01, 0.3]).addGrid(lr.fitIntercept, [False, True]).addGrid(lr.elasticNetParam, [0.0, 0.5, 1.0]).build()
     predictionsLR = TVS(lr,paramGridLR,trainingData,testData)
     #predictions.select("features", "label", "prediction").show(100)
     
+    # Random Forest MODEL
     rf = RandomForestClassifier(labelCol="label", featuresCol="features", seed=12345)
     paramGridRF = ParamGridBuilder().addGrid(rf.numTrees, [10, 30, 60, 100]).addGrid(rf.maxDepth, [3, 6, 12]).build()
     predictionsRF = TVS(rf,paramGridRF,trainingData,testData)
