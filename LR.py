@@ -66,8 +66,8 @@ if __name__ == "__main__":
     print("areaUnderROC: " + str(trainingSummary.areaUnderROC))
     
     """
-    lr = LogisticRegression(maxIter=10)
-    paramGrid = ParamGridBuilder().addGrid(lr.regParam, [0.1, 0.01]).addGrid(lr.fitIntercept, [False, True]).addGrid(lr.elasticNetParam, [0.0, 0.5, 1.0]).build()
+    lr = LogisticRegression()
+    paramGrid = ParamGridBuilder().addGrid(lr.maxIter, [10, 15, 20]).addGrid(lr.regParam, [0.1, 0.01, 0.3]).addGrid(lr.fitIntercept, [False, True]).addGrid(lr.elasticNetParam, [0.0, 0.5, 1.0]).build()
     tvs = TrainValidationSplit(estimator=lr,
                            estimatorParamMaps=paramGrid,
                            evaluator=BinaryClassificationEvaluator(),
