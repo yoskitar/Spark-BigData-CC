@@ -100,9 +100,8 @@ if __name__ == "__main__":
     # auRocGBT = evaluator.evaluate(predictionsGBT)
 
     # print("DF_TEST - Area Under Roc - LR: " + str(auRocLR) )
-    print("DF_TEST - Area Under Roc - RF: " + str(auRocRF) )
     # print("DF_TEST - Area Under Roc - GBT: " + str(auRocGBT) )
-    print(mRF.getEstimatorParamMaps()[np.argmax(mRF.avgMetrics)])
-    print(mRF.bestModel.extractParamMap())
+    print(mRF.getEstimatorParamMaps())
+    print("DF_TEST - Area Under Roc - RF: " + str(auRocRF) )
     print(mRF.validationMetrics)
     sc.stop()
