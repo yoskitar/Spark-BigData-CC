@@ -90,7 +90,7 @@ if __name__ == "__main__":
     """
     # Random Forest MODEL
     rf = RandomForestClassifier(labelCol="label", featuresCol="features", seed=12345)
-    paramGridRF = ParamGridBuilder().addGrid(rf.numTrees, [10, 5]).addGrid(rf.maxDepth, [3, 6]).build()
+    paramGridRF = ParamGridBuilder().addGrid(rf.numTrees, [10]).addGrid(rf.maxDepth, [3]).build()
     predictionsRF, mRF = TVS(rf,paramGridRF,trainingData,testData)
     
     # Evaluate model
@@ -104,5 +104,5 @@ if __name__ == "__main__":
     # print("DF_TEST - Area Under Roc - GBT: " + str(auRocGBT) )
     print(mRF.getEstimatorParamMaps()[np.argmax(mRF.avgMetrics)])
     print(mRF.bestModel.extractParamMap())
-    print(mRF.getEstimatorParamMaps())
+    print(mRF.validationMetrics)
     sc.stop()
