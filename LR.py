@@ -100,7 +100,9 @@ if __name__ == "__main__":
 
     # print("DF_TEST - Area Under Roc - LR: " + str(auRocLR) )
     # print("DF_TEST - Area Under Roc - GBT: " + str(auRocGBT) )
-    print(mRF.getEstimatorParamMaps())
     print("DF_TEST - Area Under Roc - RF: " + str(auRocRF) )
-    print(mRF.validationMetrics)
+    for idx, stage in enumerate(mRF.getEstimatorParamMaps()):
+        for param, value in stage.items():
+            print("Param: " + param.name + str(value))    
+        print("Stage " + str(idx) + " - AUC: " + str(mRF.validationMetrics[idx]))
     sc.stop()
