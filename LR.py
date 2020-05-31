@@ -17,6 +17,13 @@ def TVS(estimator, paramGrid, dataTrain, dataTest):
     predictions = model.transform(dataTest)
     return predictions, model
 
+def printResults(model):
+    for idx, stage in enumerate(model.getEstimatorParamMaps()):
+        print("Stage " + str(idx) + " - AUC: " + str(model.validationMetrics[idx]))
+    for param, value in stage.items():
+        print("Param: " + param.name + str(value))
+
+
 if __name__ == "__main__":
     # create Spark context with Spark configuration
     conf = SparkConf().setAppName("Practica 4 - O.J.F.")
@@ -75,34 +82,35 @@ if __name__ == "__main__":
     trainingSummary.roc.show()
     print("areaUnderROC: " + str(trainingSummary.areaUnderROC))
     
-    
+    """
     # Gradient-boosted tree MODEL
     gbt = GBTClassifier(labelCol="label", featuresCol="features", seed=12345)
     paramGridGBT = ParamGridBuilder().addGrid(gbt.maxIter, [10, 15, 20]).addGrid(gbt.maxDepth, [3, 6, 12]).build()
-    predictionsGBT = TVS(gbt,paramGridGBT,trainingData,testData)
+    predictionsGBT, mGBT = TVS(gbt,paramGridGBT,trainingData,testData)
 
     # Logistic Regression MODEL
     lr = LogisticRegression(maxIter=10)
     paramGridLR = ParamGridBuilder().addGrid(lr.regParam, [0.1, 0.01, 0.3]).addGrid(lr.fitIntercept, [False, True]).addGrid(lr.elasticNetParam, [0.0, 0.5, 1.0]).build()
-    predictionsLR = TVS(lr,paramGridLR,trainingData,testData)
+    predictionsLR, mLR = TVS(lr,paramGridLR,trainingData,testData)
     #predictions.select("features", "label", "prediction").show(100)
-    """
+    
     # Random Forest MODEL
     rf = RandomForestClassifier(labelCol="label", featuresCol="features", seed=12345)
-    paramGridRF = ParamGridBuilder().addGrid(rf.numTrees, [10]).addGrid(rf.maxDepth, [3]).build()
+    paramGridRF = ParamGridBuilder().addGrid(rf.numTrees, [10, 30]).addGrid(rf.maxDepth, [3, 6]).build()
     predictionsRF, mRF = TVS(rf,paramGridRF,trainingData,testData)
     
     # Evaluate model
     evaluator = BinaryClassificationEvaluator()
-    # auRocLR = evaluator.evaluate(predictionsLR)
+    auRocLR = evaluator.evaluate(predictionsLR)
     auRocRF = evaluator.evaluate(predictionsRF)
-    # auRocGBT = evaluator.evaluate(predictionsGBT)
+    auRocGBT = evaluator.evaluate(predictionsGBT)
 
-    # print("DF_TEST - Area Under Roc - LR: " + str(auRocLR) )
-    # print("DF_TEST - Area Under Roc - GBT: " + str(auRocGBT) )
+    printResults(mLR)
+    printResults(mRF)
+    printResults(mGBT)
+
+    print("DF_TEST - Area Under Roc - LR: " + str(auRocLR) )
+    print("DF_TEST - Area Under Roc - GBT: " + str(auRocGBT) )
     print("DF_TEST - Area Under Roc - RF: " + str(auRocRF) )
-    for idx, stage in enumerate(mRF.getEstimatorParamMaps()):
-        for param, value in stage.items():
-            print("Param: " + param.name + str(value))    
-        print("Stage " + str(idx) + " - AUC: " + str(mRF.validationMetrics[idx]))
+       
     sc.stop()
