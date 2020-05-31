@@ -96,7 +96,7 @@ if __name__ == "__main__":
     
     # Random Forest MODEL
     rf = RandomForestClassifier(labelCol="label", featuresCol="features", seed=12345)
-    paramGridRF = ParamGridBuilder().addGrid(rf.numTrees, [10, 30]).addGrid(rf.maxDepth, [3, 6]).build()
+    paramGridRF = ParamGridBuilder().addGrid(rf.numTrees, [10, 30, 60]).addGrid(rf.maxDepth, [3, 6, 12]).build()
     predictionsRF, mRF = TVS(rf,paramGridRF,trainingData,testData)
     
     # Evaluate model
