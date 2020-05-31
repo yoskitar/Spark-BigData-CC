@@ -78,7 +78,7 @@ if __name__ == "__main__":
     
     gbt = GBTClassifier(labelCol="label", featuresCol="features", seed=12345)
     paramGridGBT = ParamGridBuilder().addGrid(gbt.maxIter, [10, 15, 20]).addGrid(gbt.maxDepth, [3, 6, 12]).build()
-    predictionsGBT = TVS(rf,paramGridGBT,trainingData,testData)
+    predictionsGBT = TVS(gbt,paramGridGBT,trainingData,testData)
 
     lr = LogisticRegression(maxIter=10)
     paramGridLR = ParamGridBuilder().addGrid(lr.regParam, [0.1, 0.01, 0.3]).addGrid(lr.fitIntercept, [False, True]).addGrid(lr.elasticNetParam, [0.0, 0.5, 1.0]).build()
