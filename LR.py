@@ -20,8 +20,8 @@ def TVS(estimator, paramGrid, dataTrain, dataTest):
 def printResults(model):
     for idx, stage in enumerate(model.getEstimatorParamMaps()):
         print("Stage " + str(idx) + " - AUC: " + str(model.validationMetrics[idx]))
-    for param, value in stage.items():
-        print("Param: " + param.name + str(value))
+        for param, value in stage.items():
+            print("\tParam: " + param.name + " - Value: " +str(value))
 
 
 if __name__ == "__main__":
@@ -110,7 +110,7 @@ if __name__ == "__main__":
     printResults(mGBT)
 
     print("DF_TEST - Area Under Roc - LR: " + str(auRocLR) )
-    print("DF_TEST - Area Under Roc - GBT: " + str(auRocGBT) )
     print("DF_TEST - Area Under Roc - RF: " + str(auRocRF) )
+    print("DF_TEST - Area Under Roc - GBT: " + str(auRocGBT) )
        
     sc.stop()
