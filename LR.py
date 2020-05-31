@@ -1,5 +1,4 @@
 import sys
-import numpy as np
 from pyspark import SparkContext, SparkConf, sql
 from pyspark.ml.classification import GBTClassifier, LogisticRegression, RandomForestClassifier
 from functools import reduce
