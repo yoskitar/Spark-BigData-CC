@@ -5,10 +5,10 @@ from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.tuning import ParamGridBuilder, TrainValidationSplit
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 
-# Función para realizar el entrenamiento indicando el grid de parámetros
-# junto al modelo, la métrica de evaluación, que por defecto en nuestro 
-# caso caso será AUC, y el porcentaje del conjunto de datos destinados 
-# a entrenamiento y validación.
+# Funcion para realizar el entrenamiento indicando el grid de parámetros
+# junto al modelo, la metrica de evaluacion, que por defecto en nuestro 
+# caso caso sera AUC, y el porcentaje del conjunto de datos destinados 
+# a entrenamiento y validacion.
 def TVS(estimator, paramGrid, dataTrain, dataTest):
     # Definimos el TVS
     tvs = TrainValidationSplit(estimator=estimator,
@@ -16,17 +16,17 @@ def TVS(estimator, paramGrid, dataTrain, dataTest):
                            evaluator=BinaryClassificationEvaluator(),
                            # 80% entrenamiento, 20% validación
                            trainRatio=0.8)
-    # Entrenamos el modelo con la mejor convinación 
-    # de parámetros del grid por defecto
+    # Entrenamos el modelo con la mejor combinacion 
+    # de parametros del grid por defecto
     model = tvs.fit(dataTrain)
     # Obtenemos predicciones sobre Test
     predictions = model.transform(dataTest)
     return predictions, model
 
-# Función para mostrar las parametrizaciones de cada parametrización del 
+# Funcion para mostrar las parametrizaciones de cada parametrizacion del 
 # modelo y el resultado obtenido para el conjunto de validación.
 def printStagesResults(model):
-    # Para cada parametrización:
+    # Para cada parametrizacion:
     for idx, stage in enumerate(model.getEstimatorParamMaps()):
         # La posición de la métrica en el vector coincide con la posición de la 
         # parametrización, por lo que accedemos al mismo índice e imprimimos el valor.
