@@ -5,7 +5,7 @@ from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.tuning import ParamGridBuilder, TrainValidationSplit
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 
-# Funcion para realizar el entrenamiento indicando el grid de parámetros
+# Funcion para realizar el entrenamiento indicando el grid de parametros
 # junto al modelo, la metrica de evaluacion, que por defecto en nuestro 
 # caso caso sera AUC, y el porcentaje del conjunto de datos destinados 
 # a entrenamiento y validacion.
@@ -14,7 +14,7 @@ def TVS(estimator, paramGrid, dataTrain, dataTest):
     tvs = TrainValidationSplit(estimator=estimator,
                            estimatorParamMaps=paramGrid,
                            evaluator=BinaryClassificationEvaluator(),
-                           # 80% entrenamiento, 20% validación
+                           # 80% entrenamiento, 20% validacion
                            trainRatio=0.8)
     # Entrenamos el modelo con la mejor combinacion 
     # de parametros del grid por defecto
@@ -24,12 +24,12 @@ def TVS(estimator, paramGrid, dataTrain, dataTest):
     return predictions, model
 
 # Funcion para mostrar las parametrizaciones de cada parametrizacion del 
-# modelo y el resultado obtenido para el conjunto de validación.
+# modelo y el resultado obtenido para el conjunto de validacion.
 def printStagesResults(model):
     # Para cada parametrizacion:
     for idx, stage in enumerate(model.getEstimatorParamMaps()):
-        # La posición de la métrica en el vector coincide con la posición de la 
-        # parametrización, por lo que accedemos al mismo índice e imprimimos el valor.
+        # La posicion de la metrica en el vector coincide con la posición de la 
+        # parametrizacion, por lo que accedemos al mismo indice e imprimimos el valor.
         print("Stage " + str(idx) + " - AUC: " + str(model.validationMetrics[idx]))
         for param, value in stage.items():
             print("\tParam: " + param.name + " - Value: " +str(value))
@@ -48,8 +48,8 @@ if __name__ == "__main__":
     c0_count = df_columns.filter(df_columns['class']==0).count()
     c1_count = df_columns.filter(df_columns['class']==1).count()
 
-    # Realizamos un undersampling, quedándonos con el tamaño 
-    # para cada clase relativo al de la clase en menor proporción
+    # Realizamos un undersampling, quedandonos con el tamaño 
+    # para cada clase relativo al de la clase en menor proporcion
     tam_partition = c1_count
     if(c0_count < c1_count):
         tam_partition = c0_count
@@ -76,7 +76,7 @@ if __name__ == "__main__":
     df_test_0_count = df_test.filter(df_columns['class']==0).select('class').count()
 
     # Preparamos el DF para aplicar los algoritmos de MLLib,
-    # añadiendo una nueva columna como vector de características
+    # añadiendo una nueva columna como vector de caracteristicas
     assembler = VectorAssembler(inputCols=["PredSA_freq_global_0", "PredSA_central_-2", "PSSM_r1_3_V", "PSSM_r1_2_I", "PSSM_r1_2_W", "PSSM_r2_-4_Y"], outputCol='features')
     trainingData = assembler.transform(df_train).select("features","class").withColumnRenamed("class","label")
     testData = assembler.transform(df_test).select("features","class").withColumnRenamed("class","label")
@@ -97,13 +97,13 @@ if __name__ == "__main__":
     predictionsGBT, mGBT = TVS(gbt,paramGridGBT,trainingData,testData)
     predictionsRF, mRF = TVS(rf,paramGridRF,trainingData,testData)
     
-    # Evaluamos los modelos con la métrica AUC por defecto
+    # Evaluamos los modelos con la metrica AUC por defecto
     evaluator = BinaryClassificationEvaluator()
     auRocLR = evaluator.evaluate(predictionsLR)
     auRocRF = evaluator.evaluate(predictionsRF)
     auRocGBT = evaluator.evaluate(predictionsGBT)
 
-    # Mostramos el tamaño de los conjuntos para documentación
+    # Mostramos el tamaño de los conjuntos para documentacion
     print("Dataset desbalanceado: ")
     print('\tClass 0 count: ' + str(c0_count))
     print('\tClass 1 count: ' + str(c1_count))
@@ -117,7 +117,7 @@ if __name__ == "__main__":
     print('\t\tTest class 1: ' + str(df_test_1_count))
 
     # Mostramos los resultados de las parametrizaciones
-    # junto a métrica AUC de validación
+    # junto a metrica AUC de validacion
     printStagesResults(mLR)
     printStagesResults(mRF)
     printStagesResults(mGBT)
