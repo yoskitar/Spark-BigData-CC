@@ -1,7 +1,5 @@
-import sys
 from pyspark import SparkContext, SparkConf, sql
 from pyspark.ml.classification import GBTClassifier, LogisticRegression, RandomForestClassifier
-from functools import reduce
 from pyspark.ml.linalg import Vectors
 from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.tuning import ParamGridBuilder, TrainValidationSplit
