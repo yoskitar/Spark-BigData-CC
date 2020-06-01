@@ -108,7 +108,7 @@ if __name__ == "__main__":
     print('\tClass 0 count: ' + str(c0_count))
     print('\tClass 1 count: ' + str(c1_count))
     print("Dataset balanceado: ")
-    print('\tTamaño total: ' + str(df_balanced_count))
+    print('\tTamanio total: ' + str(df_balanced_count))
     print('\tTrain: ' + str(df_train_count))
     print('\t\tTrain class 0: ' + str(df_train_0_count))
     print('\t\tTrain class 1: ' + str(df_train_1_count))
