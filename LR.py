@@ -28,7 +28,7 @@ def TVS(estimator, paramGrid, dataTrain, dataTest):
 def printStagesResults(model):
     # Para cada parametrizacion:
     for idx, stage in enumerate(model.getEstimatorParamMaps()):
-        # La posicion de la metrica en el vector coincide con la posición de la 
+        # La posicion de la metrica en el vector coincide con la posicion de la 
         # parametrizacion, por lo que accedemos al mismo indice e imprimimos el valor.
         print("Stage " + str(idx) + " - AUC: " + str(model.validationMetrics[idx]))
         for param, value in stage.items():
