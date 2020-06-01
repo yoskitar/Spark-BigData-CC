@@ -48,7 +48,7 @@ if __name__ == "__main__":
     c0_count = df_columns.filter(df_columns['class']==0).count()
     c1_count = df_columns.filter(df_columns['class']==1).count()
 
-    # Realizamos un undersampling, quedandonos con el tamaño 
+    # Realizamos un undersampling, quedandonos con el tamanio 
     # para cada clase relativo al de la clase en menor proporcion
     tam_partition = c1_count
     if(c0_count < c1_count):
@@ -76,7 +76,7 @@ if __name__ == "__main__":
     df_test_0_count = df_test.filter(df_columns['class']==0).select('class').count()
 
     # Preparamos el DF para aplicar los algoritmos de MLLib,
-    # añadiendo una nueva columna como vector de caracteristicas
+    # aniadiendo una nueva columna como vector de caracteristicas
     assembler = VectorAssembler(inputCols=["PredSA_freq_global_0", "PredSA_central_-2", "PSSM_r1_3_V", "PSSM_r1_2_I", "PSSM_r1_2_W", "PSSM_r2_-4_Y"], outputCol='features')
     trainingData = assembler.transform(df_train).select("features","class").withColumnRenamed("class","label")
     testData = assembler.transform(df_test).select("features","class").withColumnRenamed("class","label")
@@ -103,7 +103,7 @@ if __name__ == "__main__":
     auRocRF = evaluator.evaluate(predictionsRF)
     auRocGBT = evaluator.evaluate(predictionsGBT)
 
-    # Mostramos el tamaño de los conjuntos para documentacion
+    # Mostramos el tamanio de los conjuntos para documentacion
     print("Dataset desbalanceado: ")
     print('\tClass 0 count: ' + str(c0_count))
     print('\tClass 1 count: ' + str(c1_count))
